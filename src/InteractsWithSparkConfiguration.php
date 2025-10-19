@@ -66,10 +66,12 @@ trait InteractsWithSparkConfiguration
     {
         if (! empty($_SERVER['HOME'])) {
             return $_SERVER['HOME'];
-        } elseif (! empty($_SERVER['HOMEDRIVE']) && ! empty($_SERVER['HOMEPATH'])) {
-            return $_SERVER['HOMEDRIVE'].$_SERVER['HOMEPATH'];
-        } else {
-            throw new Exception('Cannot determine home directory.');
         }
+        
+        if (! empty($_SERVER['HOMEDRIVE']) && ! empty($_SERVER['HOMEPATH'])) {
+            return $_SERVER['HOMEDRIVE'].$_SERVER['HOMEPATH'];
+        }
+        
+        throw new Exception('Cannot determine home directory.');
     }
 }
