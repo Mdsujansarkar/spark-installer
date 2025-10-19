@@ -36,7 +36,7 @@ class RegisterCommand extends SymfonyCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        if (! $this->valid($input->getArgument('token'))) {
+        if (! $this->valid($input->getArgument('token'), $output)) {
             return $this->tokenIsInvalid($output);
         }
 
@@ -55,9 +55,10 @@ class RegisterCommand extends SymfonyCommand
      * Determine if the given token is valid.
      *
      * @param  string  $token
+     * @param  OutputInterface|null  $output
      * @return bool
      */
-    protected function valid($token)
+    protected function valid($token, $output = null)
     {
         try {
             (new HttpClient)->get(
@@ -67,7 +68,9 @@ class RegisterCommand extends SymfonyCommand
 
             return true;
         } catch (Exception $e) {
-            var_dump($e->getMessage());
+            if ($output) {
+                $output->writeln('<error>Error: ' . $e->getMessage() . '</error>');
+            }
 
             return false;
         }
